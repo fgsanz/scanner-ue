@@ -264,10 +264,6 @@ class MainActivity : AppCompatActivity() {
                     binding.responseText.text = if (bodyText.isBlank()) "(empty body)" else bodyText
 
                     if (response.isSuccessful) {
-                        val parsedSummary = parseSuccessBody(bodyText)
-                        if (parsedSummary != null) {
-                            binding.decodedInfoText.text = parsedSummary
-                        }
                         binding.statusText.text = "Sent successfully (${response.code})"
                     } else {
                         val apiError = parseErrorBody(bodyText)
@@ -279,21 +275,6 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         })
-    }
-
-    private fun parseSuccessBody(body: String): String? {
-        return try {
-            val json = JSONObject(body)
-            val productId = json.optString("productId")
-            val name = json.optString("name")
-            val sku = json.optString("sku")
-            val category = json.optString("category")
-            val quantity = json.optInt("quantity", -1)
-
-            "Product ID: $productId\nName: $name\nSKU: $sku\nCategory: $category\nQuantity: $quantity"
-        } catch (_: Exception) {
-            null
-        }
     }
 
     private fun parseErrorBody(body: String): String {
