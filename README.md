@@ -4,7 +4,7 @@ Android app for rugged scanner phones. It captures scanned box barcodes, shows t
 
 ## Features
 
-- Captures barcodes from scanner wedge input (keyboard-style scanner output).
+- Captures barcodes from scanner wedge key events (keyboard-style scanner output) without a visible text input field.
 - Also listens for scanner broadcast intents used by common rugged devices.
 - Shows on-screen:
   - Last scanned barcode
@@ -48,7 +48,7 @@ If you want command-line builds from this repo:
 ## Scanner setup notes for rugged devices
 
 - Preferred: keyboard wedge mode that sends barcode text + Enter.
-- The app keeps scanner input focused and handles Enter/Tab suffixes.
+- The app captures wedge key events at activity level and uses Enter/Tab as scan terminators.
 - If your scanner uses intent broadcast mode instead, configure it to send barcode text in one of these extras:
   - `com.symbol.datawedge.data_string`
   - `data`

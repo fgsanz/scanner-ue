@@ -5,8 +5,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
+import android.os.SystemClock
 import android.view.KeyEvent
-import android.view.inputmethod.EditorInfo
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.scannerue.app.databinding.ActivityMainBinding
@@ -26,6 +26,8 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private val httpClient = OkHttpClient()
+    private val wedgeBuffer = StringBuilder()
+    private var lastWedgeKeyAtMs = 0L
 
     private val productCatalog = mapOf(
         "PROD-BAN-0912" to "Organic Cavendish Bananas (Bunch)",
@@ -49,36 +51,42 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.scannerInput.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
-                handleScan(binding.scannerInput.text.toString())
-                true
-            } else {
-                false
-            }
-        }
-
-        binding.scannerInput.setOnKeyListener { _, keyCode, event ->
-            if (event.action == KeyEvent.ACTION_DOWN &&
-                (keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.KEYCODE_TAB)
-            ) {
-                handleScan(binding.scannerInput.text.toString())
-                true
-            } else {
-                false
-            }
-        }
-
         binding.clearButton.setOnClickListener {
             binding.barcodeValueText.text = "-"
             binding.decodedInfoText.text = "-"
             binding.responseText.text = "-"
             binding.statusText.text = "Waiting for scan..."
-            binding.scannerInput.text?.clear()
-            binding.scannerInput.requestFocus()
+        }
+    }
+
+    override fun dispatchKeyEvent(event: KeyEvent): Boolean {
+        if (event.action != KeyEvent.ACTION_DOWN) {
+            return super.dispatchKeyEvent(event)
         }
 
-        binding.scannerInput.requestFocus()
+        val now = SystemClock.elapsedRealtime()
+        if (now - lastWedgeKeyAtMs > WEDGE_TIMEOUT_MS) {
+            wedgeBuffer.clear()
+        }
+        lastWedgeKeyAtMs = now
+
+        if (event.keyCode == KeyEvent.KEYCODE_ENTER || event.keyCode == KeyEvent.KEYCODE_TAB) {
+            val scanned = wedgeBuffer.toString().trim()
+            wedgeBuffer.clear()
+            if (scanned.isNotEmpty()) {
+                handleScan(scanned)
+                return true
+            }
+            return super.dispatchKeyEvent(event)
+        }
+
+        val unicode = event.unicodeChar
+        if (unicode != 0 && !event.isCtrlPressed && !event.isAltPressed) {
+            wedgeBuffer.append(unicode.toChar())
+            return true
+        }
+
+        return super.dispatchKeyEvent(event)
     }
 
     override fun onStart() {
@@ -141,8 +149,6 @@ class MainActivity : AppCompatActivity() {
         } ?: "Unknown Product ID. The API may return 404 for this barcode."
 
         binding.decodedInfoText.text = decodedText
-        binding.scannerInput.text?.clear()
-        binding.scannerInput.requestFocus()
 
         postScanToApi(barcode)
     }
@@ -209,5 +215,6 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         private const val BASE_URL = "https://eod-demo-f7drswf6vq-ma.a.run.app"
+        private const val WEDGE_TIMEOUT_MS = 1200L
     }
 }

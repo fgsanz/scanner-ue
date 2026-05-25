@@ -21,20 +21,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="Scan a box barcode. The app shows the raw barcode text and posts it to MatNord over the public internet."
+            android:text="Scan a box barcode using the hardware trigger. The app shows the barcode and posts it to MatNord over the public internet."
             android:textAppearance="@style/TextAppearance.Material3.BodyMedium" />
-
-        <EditText
-            android:id="@+id/scannerInput"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:autofillHints=""
-            android:hint="Scanner input (wedge mode)"
-            android:imeOptions="actionDone"
-            android:importantForAutofill="no"
-            android:inputType="textVisiblePassword"
-            android:maxLines="1" />
 
         <TextView
             android:layout_width="match_parent"
