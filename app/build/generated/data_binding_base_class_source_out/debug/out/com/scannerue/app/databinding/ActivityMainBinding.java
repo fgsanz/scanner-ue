@@ -34,21 +34,20 @@ public final class ActivityMainBinding implements ViewBinding {
   public final TextView responseText;
 
   @NonNull
-  public final EditText scannerInput;
+  public final EditText scannerSink;
 
   @NonNull
   public final TextView statusText;
 
   private ActivityMainBinding(@NonNull ScrollView rootView, @NonNull TextView barcodeValueText,
       @NonNull Button clearButton, @NonNull TextView decodedInfoText,
-      @NonNull TextView responseText, @NonNull EditText scannerInput,
-      @NonNull TextView statusText) {
+      @NonNull TextView responseText, @NonNull EditText scannerSink, @NonNull TextView statusText) {
     this.rootView = rootView;
     this.barcodeValueText = barcodeValueText;
     this.clearButton = clearButton;
     this.decodedInfoText = decodedInfoText;
     this.responseText = responseText;
-    this.scannerInput = scannerInput;
+    this.scannerSink = scannerSink;
     this.statusText = statusText;
   }
 
@@ -103,9 +102,9 @@ public final class ActivityMainBinding implements ViewBinding {
         break missingId;
       }
 
-      id = R.id.scannerInput;
-      EditText scannerInput = ViewBindings.findChildViewById(rootView, id);
-      if (scannerInput == null) {
+      id = R.id.scannerSink;
+      EditText scannerSink = ViewBindings.findChildViewById(rootView, id);
+      if (scannerSink == null) {
         break missingId;
       }
 
@@ -116,7 +115,7 @@ public final class ActivityMainBinding implements ViewBinding {
       }
 
       return new ActivityMainBinding((ScrollView) rootView, barcodeValueText, clearButton,
-          decodedInfoText, responseText, scannerInput, statusText);
+          decodedInfoText, responseText, scannerSink, statusText);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

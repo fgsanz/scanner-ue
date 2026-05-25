@@ -24,6 +24,19 @@
             android:text="Scan a box barcode using the hardware trigger. The app shows the barcode and posts it to MatNord over the public internet."
             android:textAppearance="@style/TextAppearance.Material3.BodyMedium" />
 
+        <EditText
+            android:id="@+id/scannerSink"
+            android:layout_width="1dp"
+            android:layout_height="1dp"
+            android:alpha="0"
+            android:autofillHints=""
+            android:cursorVisible="false"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:importantForAutofill="no"
+            android:inputType="textVisiblePassword"
+            android:maxLines="1" />
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

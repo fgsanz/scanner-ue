@@ -6,7 +6,7 @@ id barcodeValueText
 id clearButton
 id decodedInfoText
 id responseText
-id scannerInput
+id scannerSink
 id statusText
 layout activity_main
 string app_name

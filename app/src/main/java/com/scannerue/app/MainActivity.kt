@@ -5,8 +5,14 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.os.SystemClock
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.KeyEvent
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.scannerue.app.databinding.ActivityMainBinding
@@ -26,8 +32,12 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private val httpClient = OkHttpClient()
-    private val wedgeBuffer = StringBuilder()
-    private var lastWedgeKeyAtMs = 0L
+    private val scanFinalizeHandler = Handler(Looper.getMainLooper())
+    private val finalizeScanRunnable = Runnable { consumeSinkTextAndScan() }
+    private val pendingScans = ArrayDeque<String>()
+    private var isSending = false
+    private var lastQueuedBarcode = ""
+    private var lastQueuedAtMs = 0L
 
     private val productCatalog = mapOf(
         "PROD-BAN-0912" to "Organic Cavendish Bananas (Bunch)",
@@ -50,53 +60,107 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        setupScannerSink()
 
         binding.clearButton.setOnClickListener {
+            scanFinalizeHandler.removeCallbacks(finalizeScanRunnable)
             binding.barcodeValueText.text = "-"
             binding.decodedInfoText.text = "-"
             binding.responseText.text = "-"
             binding.statusText.text = "Waiting for scan..."
+            binding.scannerSink.text?.clear()
+            focusScannerSink()
         }
-    }
-
-    override fun dispatchKeyEvent(event: KeyEvent): Boolean {
-        if (event.action != KeyEvent.ACTION_DOWN) {
-            return super.dispatchKeyEvent(event)
-        }
-
-        val now = SystemClock.elapsedRealtime()
-        if (now - lastWedgeKeyAtMs > WEDGE_TIMEOUT_MS) {
-            wedgeBuffer.clear()
-        }
-        lastWedgeKeyAtMs = now
-
-        if (event.keyCode == KeyEvent.KEYCODE_ENTER || event.keyCode == KeyEvent.KEYCODE_TAB) {
-            val scanned = wedgeBuffer.toString().trim()
-            wedgeBuffer.clear()
-            if (scanned.isNotEmpty()) {
-                handleScan(scanned)
-                return true
-            }
-            return super.dispatchKeyEvent(event)
-        }
-
-        val unicode = event.unicodeChar
-        if (unicode != 0 && !event.isCtrlPressed && !event.isAltPressed) {
-            wedgeBuffer.append(unicode.toChar())
-            return true
-        }
-
-        return super.dispatchKeyEvent(event)
     }
 
     override fun onStart() {
         super.onStart()
         registerScannerReceiver()
+        focusScannerSink()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        focusScannerSink()
     }
 
     override fun onStop() {
+        scanFinalizeHandler.removeCallbacks(finalizeScanRunnable)
         unregisterReceiver(scannerReceiver)
         super.onStop()
+    }
+
+    private fun setupScannerSink() {
+        binding.scannerSink.showSoftInputOnFocus = false
+        binding.scannerSink.isFocusableInTouchMode = true
+
+        binding.scannerSink.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                consumeSinkTextAndScan()
+                true
+            } else {
+                false
+            }
+        }
+
+        binding.scannerSink.setOnKeyListener { _, keyCode, event ->
+            if (event.action == KeyEvent.ACTION_DOWN &&
+                (keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.KEYCODE_TAB)
+            ) {
+                consumeSinkTextAndScan()
+                true
+            } else {
+                false
+            }
+        }
+
+        binding.scannerSink.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) = Unit
+
+            override fun afterTextChanged(s: Editable?) {
+                val max = MAX_WEDGE_BUFFER
+                if ((s?.length ?: 0) > max) {
+                    s?.delete(0, (s.length - max))
+                }
+
+                scanFinalizeHandler.removeCallbacks(finalizeScanRunnable)
+                if (!s.isNullOrBlank()) {
+                    // Some scanners do not send an Enter suffix. Finalize scan after brief idle time.
+                    scanFinalizeHandler.postDelayed(finalizeScanRunnable, SCAN_IDLE_FINALIZE_MS)
+                }
+            }
+        })
+    }
+
+    private fun consumeSinkTextAndScan() {
+        scanFinalizeHandler.removeCallbacks(finalizeScanRunnable)
+        val scanned = normalizeRawScan(binding.scannerSink.text?.toString().orEmpty())
+        binding.scannerSink.text?.clear()
+        if (scanned.isNotEmpty()) {
+            handleScan(scanned)
+        }
+        focusScannerSink()
+    }
+
+    private fun normalizeRawScan(raw: String): String {
+        val trimmed = raw.trim()
+        if (trimmed.isEmpty()) return ""
+
+        // Keep the latest product-like token if multiple scans were concatenated.
+        val productMatches = PRODUCT_ID_REGEX.findAll(trimmed).toList()
+        if (productMatches.isNotEmpty()) {
+            return productMatches.last().value
+        }
+
+        val tokens = trimmed.split(Regex("\\s+"))
+        return tokens.lastOrNull().orEmpty()
+    }
+
+    private fun focusScannerSink() {
+        binding.scannerSink.requestFocus()
+        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(binding.scannerSink.windowToken, 0)
     }
 
     private fun registerScannerReceiver() {
@@ -137,7 +201,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun handleScan(rawValue: String) {
-        val barcode = rawValue.trim()
+        val barcode = normalizeRawScan(rawValue)
         if (barcode.isEmpty()) {
             return
         }
@@ -150,11 +214,33 @@ class MainActivity : AppCompatActivity() {
 
         binding.decodedInfoText.text = decodedText
 
-        postScanToApi(barcode)
+        enqueueScan(barcode)
+    }
+
+    private fun enqueueScan(barcode: String) {
+        val now = SystemClock.elapsedRealtime()
+
+        // Prevent accidental duplicate fire from scanner suffix/key echo.
+        if (barcode == lastQueuedBarcode && now - lastQueuedAtMs < DUPLICATE_GUARD_MS) {
+            return
+        }
+
+        lastQueuedBarcode = barcode
+        lastQueuedAtMs = now
+        pendingScans.addLast(barcode)
+        drainScanQueue()
+    }
+
+    private fun drainScanQueue() {
+        if (isSending) return
+
+        val nextBarcode = pendingScans.removeFirstOrNull() ?: return
+        isSending = true
+        postScanToApi(nextBarcode)
     }
 
     private fun postScanToApi(productId: String) {
-        binding.statusText.text = "Sending to API..."
+        binding.statusText.text = "Sending to API: $productId"
 
         val encodedProductId = URLEncoder.encode(productId, StandardCharsets.UTF_8.toString())
         val request = Request.Builder()
@@ -167,6 +253,8 @@ class MainActivity : AppCompatActivity() {
                 runOnUiThread {
                     binding.statusText.text = "Network error: ${e.message}"
                     binding.responseText.text = "No response body"
+                    isSending = false
+                    drainScanQueue()
                 }
             }
 
@@ -185,6 +273,9 @@ class MainActivity : AppCompatActivity() {
                         val apiError = parseErrorBody(bodyText)
                         binding.statusText.text = "API error ${response.code}: $apiError"
                     }
+
+                    isSending = false
+                    drainScanQueue()
                 }
             }
         })
@@ -215,6 +306,9 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         private const val BASE_URL = "https://eod-demo-f7drswf6vq-ma.a.run.app"
-        private const val WEDGE_TIMEOUT_MS = 1200L
+        private const val MAX_WEDGE_BUFFER = 128
+        private const val SCAN_IDLE_FINALIZE_MS = 180L
+        private const val DUPLICATE_GUARD_MS = 350L
+        private val PRODUCT_ID_REGEX = Regex("PROD-[A-Z]{3}-\\d{4}")
     }
 }
