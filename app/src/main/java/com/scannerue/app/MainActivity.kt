@@ -15,6 +15,7 @@ import android.text.TextWatcher
 import android.view.KeyEvent
 import android.view.View
 import android.view.WindowManager
+import android.widget.FrameLayout
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
@@ -50,6 +51,7 @@ class MainActivity : AppCompatActivity() {
     private var isSending = false
     private var lastQueuedBarcode = ""
     private var lastQueuedAtMs = 0L
+    private var hasScannedAtLeastOnce = false
 
     private val productCatalog = mapOf(
         "PROD-BAN-0912" to ProductInfo("Organic Cavendish Bananas (Bunch)", "Fresh Produce / Fruits"),
@@ -127,6 +129,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun showSplashState() {
         binding.splashOverlay.visibility = View.VISIBLE
+        updateBottomActionsVisibility(false)
         binding.waitingSection.visibility = View.VISIBLE
         binding.scannedSection.visibility = View.GONE
         splashHandler.removeCallbacks(hideSplashRunnable)
@@ -134,6 +137,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showWaitingState() {
+        updateBottomActionsVisibility(hasScannedAtLeastOnce)
         binding.waitingSection.visibility = View.VISIBLE
         binding.scannedSection.visibility = View.GONE
         binding.developerSection.visibility = View.GONE
@@ -145,6 +149,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showScannedState(barcode: String, productInfo: ProductInfo?) {
+        hasScannedAtLeastOnce = true
+        updateBottomActionsVisibility(true)
         binding.waitingSection.visibility = View.GONE
         binding.scannedSection.visibility = View.VISIBLE
         binding.developerSection.visibility = View.GONE
@@ -264,6 +270,21 @@ class MainActivity : AppCompatActivity() {
         val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         val token = currentFocus?.windowToken ?: binding.root.windowToken
         imm.hideSoftInputFromWindow(token, InputMethodManager.HIDE_NOT_ALWAYS)
+    }
+
+    private fun updateBottomActionsVisibility(visible: Boolean) {
+        binding.bottomActionsBar.visibility = if (visible) View.VISIBLE else View.GONE
+
+        val params = binding.scrollContainer.layoutParams as FrameLayout.LayoutParams
+        val targetBottomMargin = if (visible) dpToPx(96) else 0
+        if (params.bottomMargin != targetBottomMargin) {
+            params.bottomMargin = targetBottomMargin
+            binding.scrollContainer.layoutParams = params
+        }
+    }
+
+    private fun dpToPx(dp: Int): Int {
+        return (dp * resources.displayMetrics.density).toInt()
     }
 
     private fun registerScannerReceiver() {
