@@ -2023,6 +2023,20 @@ color material_timepicker_button_stroke
 color material_timepicker_clock_text_color
 color material_timepicker_clockface
 color material_timepicker_modebutton_tint
+color mn_background
+color mn_background_darker
+color mn_border
+color mn_brand_dark
+color mn_brand_teal
+color mn_green
+color mn_green_bright
+color mn_green_dark
+color mn_muted
+color mn_scanner_dark
+color mn_scanner_handle
+color mn_surface
+color mn_surface_soft
+color mn_top_bar_subtle
 color mtrl_btn_bg_color_selector
 color mtrl_btn_ripple_color
 color mtrl_btn_stroke_color_selector
@@ -2987,6 +3001,19 @@ drawable abc_textfield_search_material
 drawable abc_vector_test
 drawable avd_hide_password
 drawable avd_show_password
+drawable bg_product_id_field
+drawable bg_scanned_card
+drawable bg_scanner_device
+drawable bg_scanner_handle
+drawable bg_scanner_screen
+drawable bg_soft_panel
+drawable bg_splash_card
+drawable bg_status_chip
+drawable bg_surface_card
+drawable bg_text_button
+drawable bg_top_bar
+drawable bg_top_bar_strip
+drawable bg_trigger_mark
 drawable btn_checkbox_checked_mtrl
 drawable btn_checkbox_checked_to_unchecked_mtrl_animation
 drawable btn_checkbox_unchecked_mtrl
@@ -3013,6 +3040,7 @@ drawable ic_keyboard_black_24dp
 drawable ic_m3_chip_check
 drawable ic_m3_chip_checked_circle
 drawable ic_m3_chip_close
+drawable ic_matnord_mark
 drawable ic_mtrl_checked_circle
 drawable ic_mtrl_chip_checked_black
 drawable ic_mtrl_chip_checked_circle
@@ -3091,6 +3119,7 @@ drawable notification_template_icon_bg
 drawable notification_template_icon_low_bg
 drawable notification_tile_bg
 drawable notify_panel_notification_icon_bg
+drawable scanner
 drawable test_level_drawable
 drawable tooltip_frame_dark
 drawable tooltip_frame_light
@@ -3181,6 +3210,7 @@ id auto
 id autoComplete
 id autoCompleteToEnd
 id autoCompleteToStart
+id barcodeImage
 id barcodeValueText
 id barrier
 id baseline
@@ -3189,6 +3219,7 @@ id beginning
 id bestChoice
 id blocking
 id bottom
+id bottomActionsBar
 id bounce
 id bounceBoth
 id bounceEnd
@@ -3246,6 +3277,8 @@ id design_menu_item_action_area
 id design_menu_item_action_area_stub
 id design_menu_item_text
 id design_navigation_view
+id developerButton
+id developerSection
 id dialog_button
 id dimensions
 id direct
@@ -3451,6 +3484,7 @@ id pin
 id position
 id postLayout
 id pressed
+id productSubtitleText
 id progress_circular
 id progress_horizontal
 id radio
@@ -3469,9 +3503,11 @@ id save_non_transition_alpha
 id save_overlay_view
 id sawtooth
 id scale
+id scannedSection
 id scannerSink
 id screen
 id scroll
+id scrollContainer
 id scrollIndicatorDown
 id scrollIndicatorUp
 id scrollView
@@ -3506,6 +3542,7 @@ id snapMargins
 id south
 id spacer
 id special_effects_controller_view_tag
+id splashOverlay
 id spline
 id split_action_bar
 id spread
@@ -3564,6 +3601,7 @@ id titleDividerNoCustom
 id title_template
 id toggle
 id top
+id topBarCard
 id topPanel
 id touch_outside
 id transitionToEnd
@@ -3591,6 +3629,7 @@ id view_tree_saved_state_registry_owner
 id view_tree_view_model_store_owner
 id visible
 id visible_removing_fragment_view_tag
+id waitingSection
 id west
 id withText
 id with_icon
@@ -3961,6 +4000,9 @@ string searchview_clear_text_content_description
 string searchview_navigation_content_description
 string side_sheet_accessibility_pane_title
 string side_sheet_behavior
+string state_developer
+string state_ready
+string state_scanned
 string status_bar_notification_info_overflow
 style AlertDialog_AppCompat
 style AlertDialog_AppCompat_Light

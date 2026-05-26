@@ -1,4 +1,18 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="mn_background">#F4F8F2</color>
+    <color name="mn_background_darker">#EAF0E6</color>
+    <color name="mn_surface">#FFFFFFFF</color>
+    <color name="mn_surface_soft">#ECF7F0</color>
+    <color name="mn_border">#D6E7DD</color>
+    <color name="mn_brand_dark">#1E293B</color>
+    <color name="mn_brand_teal">#0F766E</color>
+    <color name="mn_green_dark">#059669</color>
+    <color name="mn_green">#10B981</color>
+    <color name="mn_green_bright">#34D399</color>
+    <color name="mn_muted">#64748B</color>
+    <color name="mn_top_bar_subtle">#BCD2D0</color>
+    <color name="mn_scanner_dark">#243444</color>
+    <color name="mn_scanner_handle">#33485A</color>
 </resources>

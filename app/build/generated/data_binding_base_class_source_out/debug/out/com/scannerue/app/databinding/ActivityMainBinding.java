@@ -4,14 +4,17 @@ package com.scannerue.app.databinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
+import com.google.android.material.button.MaterialButton;
 import com.scannerue.app.R;
 import java.lang.NullPointerException;
 import java.lang.Override;
@@ -19,41 +22,87 @@ import java.lang.String;
 
 public final class ActivityMainBinding implements ViewBinding {
   @NonNull
-  private final ScrollView rootView;
+  private final FrameLayout rootView;
+
+  @NonNull
+  public final ImageView barcodeImage;
 
   @NonNull
   public final TextView barcodeValueText;
 
   @NonNull
-  public final Button clearButton;
+  public final LinearLayout bottomActionsBar;
+
+  @NonNull
+  public final MaterialButton clearButton;
 
   @NonNull
   public final TextView decodedInfoText;
 
   @NonNull
+  public final TextView developerButton;
+
+  @NonNull
+  public final LinearLayout developerSection;
+
+  @NonNull
+  public final TextView productSubtitleText;
+
+  @NonNull
   public final TextView responseText;
+
+  @NonNull
+  public final LinearLayout scannedSection;
 
   @NonNull
   public final EditText scannerSink;
 
   @NonNull
+  public final ScrollView scrollContainer;
+
+  @NonNull
+  public final FrameLayout splashOverlay;
+
+  @NonNull
   public final TextView statusText;
 
-  private ActivityMainBinding(@NonNull ScrollView rootView, @NonNull TextView barcodeValueText,
-      @NonNull Button clearButton, @NonNull TextView decodedInfoText,
-      @NonNull TextView responseText, @NonNull EditText scannerSink, @NonNull TextView statusText) {
+  @NonNull
+  public final LinearLayout topBarCard;
+
+  @NonNull
+  public final LinearLayout waitingSection;
+
+  private ActivityMainBinding(@NonNull FrameLayout rootView, @NonNull ImageView barcodeImage,
+      @NonNull TextView barcodeValueText, @NonNull LinearLayout bottomActionsBar,
+      @NonNull MaterialButton clearButton, @NonNull TextView decodedInfoText,
+      @NonNull TextView developerButton, @NonNull LinearLayout developerSection,
+      @NonNull TextView productSubtitleText, @NonNull TextView responseText,
+      @NonNull LinearLayout scannedSection, @NonNull EditText scannerSink,
+      @NonNull ScrollView scrollContainer, @NonNull FrameLayout splashOverlay,
+      @NonNull TextView statusText, @NonNull LinearLayout topBarCard,
+      @NonNull LinearLayout waitingSection) {
     this.rootView = rootView;
+    this.barcodeImage = barcodeImage;
     this.barcodeValueText = barcodeValueText;
+    this.bottomActionsBar = bottomActionsBar;
     this.clearButton = clearButton;
     this.decodedInfoText = decodedInfoText;
+    this.developerButton = developerButton;
+    this.developerSection = developerSection;
+    this.productSubtitleText = productSubtitleText;
     this.responseText = responseText;
+    this.scannedSection = scannedSection;
     this.scannerSink = scannerSink;
+    this.scrollContainer = scrollContainer;
+    this.splashOverlay = splashOverlay;
     this.statusText = statusText;
+    this.topBarCard = topBarCard;
+    this.waitingSection = waitingSection;
   }
 
   @Override
   @NonNull
-  public ScrollView getRoot() {
+  public FrameLayout getRoot() {
     return rootView;
   }
 
@@ -78,14 +127,26 @@ public final class ActivityMainBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
+      id = R.id.barcodeImage;
+      ImageView barcodeImage = ViewBindings.findChildViewById(rootView, id);
+      if (barcodeImage == null) {
+        break missingId;
+      }
+
       id = R.id.barcodeValueText;
       TextView barcodeValueText = ViewBindings.findChildViewById(rootView, id);
       if (barcodeValueText == null) {
         break missingId;
       }
 
+      id = R.id.bottomActionsBar;
+      LinearLayout bottomActionsBar = ViewBindings.findChildViewById(rootView, id);
+      if (bottomActionsBar == null) {
+        break missingId;
+      }
+
       id = R.id.clearButton;
-      Button clearButton = ViewBindings.findChildViewById(rootView, id);
+      MaterialButton clearButton = ViewBindings.findChildViewById(rootView, id);
       if (clearButton == null) {
         break missingId;
       }
@@ -96,9 +157,33 @@ public final class ActivityMainBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.developerButton;
+      TextView developerButton = ViewBindings.findChildViewById(rootView, id);
+      if (developerButton == null) {
+        break missingId;
+      }
+
+      id = R.id.developerSection;
+      LinearLayout developerSection = ViewBindings.findChildViewById(rootView, id);
+      if (developerSection == null) {
+        break missingId;
+      }
+
+      id = R.id.productSubtitleText;
+      TextView productSubtitleText = ViewBindings.findChildViewById(rootView, id);
+      if (productSubtitleText == null) {
+        break missingId;
+      }
+
       id = R.id.responseText;
       TextView responseText = ViewBindings.findChildViewById(rootView, id);
       if (responseText == null) {
+        break missingId;
+      }
+
+      id = R.id.scannedSection;
+      LinearLayout scannedSection = ViewBindings.findChildViewById(rootView, id);
+      if (scannedSection == null) {
         break missingId;
       }
 
@@ -108,14 +193,40 @@ public final class ActivityMainBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.scrollContainer;
+      ScrollView scrollContainer = ViewBindings.findChildViewById(rootView, id);
+      if (scrollContainer == null) {
+        break missingId;
+      }
+
+      id = R.id.splashOverlay;
+      FrameLayout splashOverlay = ViewBindings.findChildViewById(rootView, id);
+      if (splashOverlay == null) {
+        break missingId;
+      }
+
       id = R.id.statusText;
       TextView statusText = ViewBindings.findChildViewById(rootView, id);
       if (statusText == null) {
         break missingId;
       }
 
-      return new ActivityMainBinding((ScrollView) rootView, barcodeValueText, clearButton,
-          decodedInfoText, responseText, scannerSink, statusText);
+      id = R.id.topBarCard;
+      LinearLayout topBarCard = ViewBindings.findChildViewById(rootView, id);
+      if (topBarCard == null) {
+        break missingId;
+      }
+
+      id = R.id.waitingSection;
+      LinearLayout waitingSection = ViewBindings.findChildViewById(rootView, id);
+      if (waitingSection == null) {
+        break missingId;
+      }
+
+      return new ActivityMainBinding((FrameLayout) rootView, barcodeImage, barcodeValueText,
+          bottomActionsBar, clearButton, decodedInfoText, developerButton, developerSection,
+          productSubtitleText, responseText, scannedSection, scannerSink, scrollContainer,
+          splashOverlay, statusText, topBarCard, waitingSection);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

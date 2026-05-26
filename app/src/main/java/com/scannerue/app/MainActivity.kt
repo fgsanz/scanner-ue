@@ -4,6 +4,8 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.graphics.Bitmap
+import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -11,10 +13,14 @@ import android.os.SystemClock
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.KeyEvent
+import android.view.View
+import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import com.google.zxing.BarcodeFormat
+import com.google.zxing.MultiFormatWriter
 import com.scannerue.app.databinding.ActivityMainBinding
 import okhttp3.Call
 import okhttp3.Callback
@@ -34,17 +40,23 @@ class MainActivity : AppCompatActivity() {
     private val httpClient = OkHttpClient()
     private val scanFinalizeHandler = Handler(Looper.getMainLooper())
     private val finalizeScanRunnable = Runnable { consumeSinkTextAndScan() }
+    private val splashHandler = Handler(Looper.getMainLooper())
+    private val hideSplashRunnable = Runnable {
+        binding.splashOverlay.visibility = View.GONE
+        showWaitingState()
+        focusScannerSink()
+    }
     private val pendingScans = ArrayDeque<String>()
     private var isSending = false
     private var lastQueuedBarcode = ""
     private var lastQueuedAtMs = 0L
 
     private val productCatalog = mapOf(
-        "PROD-BAN-0912" to "Organic Cavendish Bananas (Bunch)",
-        "PROD-MLK-4421" to "Clover Farms 100% Organic Whole Milk (1 Gal)",
-        "PROD-SRD-3381" to "Daily Baker's Artisanal Sourdough Boule (16oz)",
-        "PROD-EVO-7711" to "Bella Terra Cold-Pressed Extra Virgin Olive Oil (500ml)",
-        "PROD-CHP-5529" to "Fiesta Crisp Sea Salt Tortilla Chips (13oz Bag)"
+        "PROD-BAN-0912" to ProductInfo("Organic Cavendish Bananas (Bunch)", "Fresh Produce / Fruits"),
+        "PROD-MLK-4421" to ProductInfo("Clover Farms 100% Organic Whole Milk (1 Gal)", "Dairy & Eggs"),
+        "PROD-SRD-3381" to ProductInfo("Daily Baker's Artisanal Sourdough Boule (16oz)", "Bakery / Bread"),
+        "PROD-EVO-7711" to ProductInfo("Bella Terra Cold-Pressed Extra Virgin Olive Oil (500ml)", "Pantry / Oils & Vinegars"),
+        "PROD-CHP-5529" to ProductInfo("Fiesta Crisp Sea Salt Tortilla Chips (13oz Bag)", "Snacks / Chips & Crackers")
     )
 
     private val scannerReceiver = object : BroadcastReceiver() {
@@ -58,17 +70,31 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        window.setSoftInputMode(
+            WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN or
+                WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING
+        )
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setupScannerSink()
+        setupButtons()
+        showSplashState()
+    }
 
+    private fun setupButtons() {
         binding.clearButton.setOnClickListener {
-            scanFinalizeHandler.removeCallbacks(finalizeScanRunnable)
-            binding.barcodeValueText.text = "-"
-            binding.decodedInfoText.text = "-"
-            binding.responseText.text = "-"
-            binding.statusText.text = "Waiting for scan..."
-            binding.scannerSink.text?.clear()
+            clearPendingScanUi()
+            showWaitingState()
+        }
+
+        binding.developerButton.setOnClickListener {
+            val shouldShow = binding.developerSection.visibility != View.VISIBLE
+            binding.developerSection.visibility = if (shouldShow) View.VISIBLE else View.GONE
+            if (shouldShow) {
+                binding.scrollContainer.post {
+                    binding.scrollContainer.fullScroll(View.FOCUS_DOWN)
+                }
+            }
             focusScannerSink()
         }
     }
@@ -82,12 +108,84 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         focusScannerSink()
+        forceHideKeyboard()
+    }
+
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        if (hasFocus) {
+            forceHideKeyboard()
+        }
     }
 
     override fun onStop() {
         scanFinalizeHandler.removeCallbacks(finalizeScanRunnable)
+        splashHandler.removeCallbacks(hideSplashRunnable)
         unregisterReceiver(scannerReceiver)
         super.onStop()
+    }
+
+    private fun showSplashState() {
+        binding.splashOverlay.visibility = View.VISIBLE
+        binding.waitingSection.visibility = View.VISIBLE
+        binding.scannedSection.visibility = View.GONE
+        splashHandler.removeCallbacks(hideSplashRunnable)
+        splashHandler.postDelayed(hideSplashRunnable, SPLASH_DURATION_MS)
+    }
+
+    private fun showWaitingState() {
+        binding.waitingSection.visibility = View.VISIBLE
+        binding.scannedSection.visibility = View.GONE
+        binding.developerSection.visibility = View.GONE
+        binding.statusText.text = "Waiting for scan..."
+        binding.responseText.text = "-"
+        binding.scrollContainer.post {
+            binding.scrollContainer.scrollTo(0, 0)
+        }
+    }
+
+    private fun showScannedState(barcode: String, productInfo: ProductInfo?) {
+        binding.waitingSection.visibility = View.GONE
+        binding.scannedSection.visibility = View.VISIBLE
+        binding.developerSection.visibility = View.GONE
+        binding.barcodeValueText.text = barcode
+        binding.barcodeImage.setImageBitmap(renderBarcodeBitmap(barcode))
+        binding.decodedInfoText.text = productInfo?.name ?: "Unknown product"
+        binding.productSubtitleText.text = productInfo?.category
+            ?: "This barcode is not part of the five-item MatNord demo catalog."
+        binding.scrollContainer.post {
+            binding.scrollContainer.scrollTo(0, 0)
+        }
+    }
+
+    private fun clearPendingScanUi() {
+        scanFinalizeHandler.removeCallbacks(finalizeScanRunnable)
+        pendingScans.clear()
+        lastQueuedBarcode = ""
+        binding.barcodeValueText.text = "-"
+        binding.barcodeImage.setImageBitmap(null)
+        binding.decodedInfoText.text = "-"
+        binding.productSubtitleText.text = "-"
+        binding.responseText.text = "-"
+        binding.statusText.text = "Waiting for scan..."
+        binding.scannerSink.text?.clear()
+        focusScannerSink()
+    }
+
+    private fun renderBarcodeBitmap(value: String): Bitmap {
+        val matrix = MultiFormatWriter().encode(
+            value,
+            BarcodeFormat.CODE_128,
+            BARCODE_WIDTH_PX,
+            BARCODE_HEIGHT_PX
+        )
+        val bitmap = Bitmap.createBitmap(matrix.width, matrix.height, Bitmap.Config.ARGB_8888)
+        for (x in 0 until matrix.width) {
+            for (y in 0 until matrix.height) {
+                bitmap.setPixel(x, y, if (matrix.get(x, y)) Color.BLACK else Color.WHITE)
+            }
+        }
+        return bitmap
     }
 
     private fun setupScannerSink() {
@@ -159,8 +257,13 @@ class MainActivity : AppCompatActivity() {
 
     private fun focusScannerSink() {
         binding.scannerSink.requestFocus()
+        forceHideKeyboard()
+    }
+
+    private fun forceHideKeyboard() {
         val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(binding.scannerSink.windowToken, 0)
+        val token = currentFocus?.windowToken ?: binding.root.windowToken
+        imm.hideSoftInputFromWindow(token, InputMethodManager.HIDE_NOT_ALWAYS)
     }
 
     private fun registerScannerReceiver() {
@@ -206,13 +309,8 @@ class MainActivity : AppCompatActivity() {
             return
         }
 
-        binding.barcodeValueText.text = barcode
-
-        val decodedText = productCatalog[barcode]?.let { name ->
-            "Product ID: $barcode\nName: $name"
-        } ?: "Unknown Product ID. The API may return 404 for this barcode."
-
-        binding.decodedInfoText.text = decodedText
+        val productInfo = productCatalog[barcode]
+        showScannedState(barcode, productInfo)
 
         enqueueScan(barcode)
     }
@@ -290,6 +388,14 @@ class MainActivity : AppCompatActivity() {
         private const val MAX_WEDGE_BUFFER = 128
         private const val SCAN_IDLE_FINALIZE_MS = 180L
         private const val DUPLICATE_GUARD_MS = 350L
+        private const val SPLASH_DURATION_MS = 2500L
+        private const val BARCODE_WIDTH_PX = 1200
+        private const val BARCODE_HEIGHT_PX = 180
         private val PRODUCT_ID_REGEX = Regex("PROD-[A-Z]{3}-\\d{4}")
     }
+
+    private data class ProductInfo(
+        val name: String,
+        val category: String
+    )
 }

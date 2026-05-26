@@ -1,11 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
     <color name="black">#FF000000</color>
+    <color name="mn_background">#F4F8F2</color>
+    <color name="mn_background_darker">#EAF0E6</color>
+    <color name="mn_border">#D6E7DD</color>
+    <color name="mn_brand_dark">#1E293B</color>
+    <color name="mn_brand_teal">#0F766E</color>
+    <color name="mn_green">#10B981</color>
+    <color name="mn_green_bright">#34D399</color>
+    <color name="mn_green_dark">#059669</color>
+    <color name="mn_muted">#64748B</color>
+    <color name="mn_scanner_dark">#243444</color>
+    <color name="mn_scanner_handle">#33485A</color>
+    <color name="mn_surface">#FFFFFFFF</color>
+    <color name="mn_surface_soft">#ECF7F0</color>
+    <color name="mn_top_bar_subtle">#BCD2D0</color>
     <color name="white">#FFFFFFFF</color>
     <string name="app_name">Scanner UE</string>
+    <string name="state_developer">Developer</string>
+    <string name="state_ready">Ready</string>
+    <string name="state_scanned">Scanned</string>
     <style name="Theme.ScannerUe" parent="Theme.Material3.DayNight.NoActionBar">
-        <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:navigationBarColor">@android:color/black</item>
+        <item name="android:statusBarColor">@color/mn_background</item>
+        <item name="android:navigationBarColor">@color/mn_background</item>
+        <item name="colorSurface">@color/mn_surface</item>
+        <item name="colorOnSurface">@color/mn_brand_dark</item>
+        <item name="colorPrimary">@color/mn_brand_teal</item>
+        <item name="colorOnPrimary">@color/mn_surface</item>
         <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
     </style>
 </resources>

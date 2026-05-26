@@ -28,7 +28,9 @@
         android:theme="@style/Theme.ScannerUe" >
         <activity
             android:name="com.scannerue.app.MainActivity"
-            android:exported="true" >
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustNothing" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

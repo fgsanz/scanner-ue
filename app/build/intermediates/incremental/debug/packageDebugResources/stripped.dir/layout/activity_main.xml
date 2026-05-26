@@ -1,115 +1,372 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true">
+    android:background="@color/mn_background">
+
+    <ScrollView
+        android:id="@+id/scrollContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="96dp"
+        android:fillViewport="true"
+        android:overScrollMode="never">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingTop="18dp"
+            android:paddingBottom="28dp">
+
+            <EditText
+                android:id="@+id/scannerSink"
+                android:layout_width="1dp"
+                android:layout_height="1dp"
+                android:alpha="0"
+                android:autofillHints=""
+                android:cursorVisible="false"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:importantForAutofill="no"
+                android:inputType="textVisiblePassword"
+                android:maxLines="1" />
+
+            <LinearLayout
+                android:id="@+id/topBarCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_top_bar"
+                android:orientation="vertical">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="6dp"
+                    android:background="@drawable/bg_top_bar_strip" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="18dp">
+
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:contentDescription="@string/app_name"
+                        android:src="@drawable/ic_matnord_mark" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="MatNord"
+                            android:textColor="@color/mn_surface"
+                            android:textSize="22sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="Färsk. Lokal. Ärlig."
+                            android:textColor="@color/mn_top_bar_subtle"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/waitingSection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:orientation="vertical"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Ready to scan..."
+                    android:textColor="@color/mn_brand_dark"
+                    android:textSize="28sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Use the scanner trigger on the pistol grip. The latest item will appear here immediately after the scan completes."
+                    android:textColor="@color/mn_muted"
+                    android:textSize="15sp" />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp"
+                    android:layout_marginTop="18dp"
+                    android:adjustViewBounds="true"
+                    android:contentDescription="Scanner"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/scanner" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/scannedSection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:orientation="vertical"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Scanned item"
+                    android:textColor="@color/mn_brand_dark"
+                    android:textSize="12.7sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/bg_scanned_card"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <TextView
+                        android:id="@+id/decodedInfoText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="-"
+                        android:textColor="@color/mn_brand_dark"
+                        android:textSize="24sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/productSubtitleText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="-"
+                        android:textColor="@color/mn_muted"
+                        android:textSize="9.8sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="18dp"
+                        android:text="Product ID"
+                        android:textColor="@color/mn_muted"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/barcodeValueText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:background="@drawable/bg_product_id_field"
+                        android:padding="16dp"
+                        android:text="-"
+                        android:textColor="@color/mn_brand_dark"
+                        android:textIsSelectable="true"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:id="@+id/barcodeImage"
+                        android:layout_width="match_parent"
+                        android:layout_height="56dp"
+                        android:layout_marginTop="14dp"
+                        android:background="@color/mn_surface"
+                        android:contentDescription="Barcode preview"
+                        android:padding="6dp"
+                        android:scaleType="fitXY" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/developerSection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:background="@drawable/bg_surface_card"
+                android:orientation="vertical"
+                android:padding="18dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Developer details"
+                    android:textColor="@color/mn_brand_dark"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="Send status"
+                    android:textColor="@color/mn_muted"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/statusText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:background="@drawable/bg_product_id_field"
+                    android:padding="14dp"
+                    android:text="Waiting for scan..."
+                    android:textColor="@color/mn_brand_dark"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="Last API response"
+                    android:textColor="@color/mn_muted"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/responseText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:background="@drawable/bg_product_id_field"
+                    android:padding="14dp"
+                    android:text="-"
+                    android:textColor="@color/mn_brand_dark"
+                    android:textIsSelectable="true"
+                    android:textSize="13sp" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
 
     <LinearLayout
+        android:id="@+id/bottomActionsBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:layout_gravity="bottom"
+        android:background="@color/mn_surface"
+        android:elevation="10dp"
+        android:orientation="vertical">
 
-        <TextView
+        <View
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Scanner to Internet Demo"
-            android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"
-            android:textStyle="bold" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Scan a box barcode using the hardware trigger. The app shows the barcode and posts it to MatNord over the public internet."
-            android:textAppearance="@style/TextAppearance.Material3.BodyMedium" />
-
-        <EditText
-            android:id="@+id/scannerSink"
-            android:layout_width="1dp"
             android:layout_height="1dp"
-            android:alpha="0"
-            android:autofillHints=""
-            android:cursorVisible="false"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
-            android:importantForAutofill="no"
-            android:inputType="textVisiblePassword"
-            android:maxLines="1" />
+            android:background="@color/mn_border"
+            android:alpha="0.45" />
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="Last scanned barcode"
-            android:textStyle="bold" />
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="20dp"
+            android:paddingTop="10dp"
+            android:paddingEnd="20dp"
+            android:paddingBottom="18dp">
 
-        <TextView
-            android:id="@+id/barcodeValueText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:background="#FFF5F5F5"
-            android:padding="12dp"
-            android:text="-"
-            android:textIsSelectable="true"
-            android:textStyle="bold" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/clearButton"
+                style="@style/Widget.Material3.Button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:backgroundTint="@color/mn_brand_teal"
+                android:text="Clear"
+                android:textAllCaps="false"
+                android:textColor="@color/mn_surface" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="Decoded information"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/decodedInfoText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:background="#FFF5F5F5"
-            android:padding="12dp"
-            android:text="-" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="Send status"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/statusText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:background="#FFEFF6FF"
-            android:padding="12dp"
-            android:text="Waiting for scan..." />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="Last API response"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/responseText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:background="#FFF5F5F5"
-            android:padding="12dp"
-            android:text="-"
-            android:textIsSelectable="true" />
-
-        <Button
-            android:id="@+id/clearButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="Clear" />
-
+            <TextView
+                android:id="@+id/developerButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="18dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_text_button"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:paddingStart="16dp"
+                android:paddingTop="12dp"
+                android:paddingEnd="16dp"
+                android:paddingBottom="12dp"
+                android:text="Developer"
+                android:textColor="@color/mn_brand_dark"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+        </LinearLayout>
     </LinearLayout>
-</ScrollView>
+
+    <FrameLayout
+        android:id="@+id/splashOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/mn_brand_dark">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="24dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_splash_card"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:paddingStart="24dp"
+                android:paddingTop="28dp"
+                android:paddingEnd="24dp"
+                android:paddingBottom="28dp">
+
+                <ImageView
+                    android:layout_width="72dp"
+                    android:layout_height="72dp"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/ic_matnord_mark" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="18dp"
+                    android:text="MatNord"
+                    android:textColor="@color/mn_surface"
+                    android:textSize="34sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Färsk. Lokal. Ärlig."
+                    android:textColor="@color/mn_top_bar_subtle"
+                    android:textSize="16sp" />
+            </LinearLayout>
+        </LinearLayout>
+    </FrameLayout>
+
+</FrameLayout>

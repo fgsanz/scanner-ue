@@ -11,6 +11,8 @@
         android:theme="@style/Theme.ScannerUe">
         <activity
             android:name=".MainActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustNothing"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
