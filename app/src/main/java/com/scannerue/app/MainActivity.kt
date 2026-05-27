@@ -91,10 +91,15 @@ class MainActivity : AppCompatActivity() {
 
         binding.developerButton.setOnClickListener {
             val shouldShow = binding.developerSection.visibility != View.VISIBLE
-            binding.developerSection.visibility = if (shouldShow) View.VISIBLE else View.GONE
             if (shouldShow) {
+                binding.developerSection.visibility = View.VISIBLE
                 binding.scrollContainer.post {
                     binding.scrollContainer.fullScroll(View.FOCUS_DOWN)
+                }
+            } else {
+                binding.developerSection.visibility = View.GONE
+                binding.scrollContainer.post {
+                    binding.scrollContainer.smoothScrollTo(0, 0)
                 }
             }
             focusScannerSink()

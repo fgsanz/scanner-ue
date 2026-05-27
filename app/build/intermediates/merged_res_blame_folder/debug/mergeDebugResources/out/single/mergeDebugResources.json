@@ -4,8 +4,56 @@
         "source": "/Users/CEAFGS/.gradle/daemon/9.4.1/com.scannerue.app-main-33:/drawable/bg_soft_panel.xml"
     },
     {
+        "merged": "/Users/CEAFGS/.gradle/daemon/9.4.1/com.scannerue.app-debug-31:/mipmap-hdpi_ic_launcher.png.flat",
+        "source": "/Users/CEAFGS/.gradle/daemon/9.4.1/com.scannerue.app-main-33:/mipmap-hdpi/ic_launcher.png"
+    },
+    {
+        "merged": "/Users/CEAFGS/.gradle/daemon/9.4.1/com.scannerue.app-debug-31:/mipmap-anydpi-v26_ic_launcher.xml.flat",
+        "source": "/Users/CEAFGS/.gradle/daemon/9.4.1/com.scannerue.app-main-33:/mipmap-anydpi-v26/ic_launcher.xml"
+    },
+    {
+        "merged": "/Users/CEAFGS/.gradle/daemon/9.4.1/com.scannerue.app-debug-31:/drawable_ic_launcher_foreground.xml.flat",
+        "source": "/Users/CEAFGS/.gradle/daemon/9.4.1/com.scannerue.app-main-33:/drawable/ic_launcher_foreground.xml"
+    },
+    {
+        "merged": "/Users/CEAFGS/.gradle/daemon/9.4.1/com.scannerue.app-debug-31:/drawable_bg_scanned_card.xml.flat",
+        "source": "/Users/CEAFGS/.gradle/daemon/9.4.1/com.scannerue.app-main-33:/drawable/bg_scanned_card.xml"
+    },
+    {
+        "merged": "/Users/CEAFGS/.gradle/daemon/9.4.1/com.scannerue.app-debug-31:/mipmap-xxhdpi_ic_launcher.png.flat",
+        "source": "/Users/CEAFGS/.gradle/daemon/9.4.1/com.scannerue.app-main-33:/mipmap-xxhdpi/ic_launcher.png"
+    },
+    {
+        "merged": "/Users/CEAFGS/.gradle/daemon/9.4.1/com.scannerue.app-debug-31:/drawable_scanner.png.flat",
+        "source": "/Users/CEAFGS/.gradle/daemon/9.4.1/com.scannerue.app-main-33:/drawable/scanner.png"
+    },
+    {
+        "merged": "/Users/CEAFGS/.gradle/daemon/9.4.1/com.scannerue.app-debug-31:/drawable_bg_scanner_screen.xml.flat",
+        "source": "/Users/CEAFGS/.gradle/daemon/9.4.1/com.scannerue.app-main-33:/drawable/bg_scanner_screen.xml"
+    },
+    {
+        "merged": "/Users/CEAFGS/.gradle/daemon/9.4.1/com.scannerue.app-debug-31:/mipmap-xhdpi_ic_launcher.png.flat",
+        "source": "/Users/CEAFGS/.gradle/daemon/9.4.1/com.scannerue.app-main-33:/mipmap-xhdpi/ic_launcher.png"
+    },
+    {
+        "merged": "/Users/CEAFGS/.gradle/daemon/9.4.1/com.scannerue.app-debug-31:/drawable_bg_trigger_mark.xml.flat",
+        "source": "/Users/CEAFGS/.gradle/daemon/9.4.1/com.scannerue.app-main-33:/drawable/bg_trigger_mark.xml"
+    },
+    {
+        "merged": "/Users/CEAFGS/.gradle/daemon/9.4.1/com.scannerue.app-debug-31:/mipmap-mdpi_ic_launcher.png.flat",
+        "source": "/Users/CEAFGS/.gradle/daemon/9.4.1/com.scannerue.app-main-33:/mipmap-mdpi/ic_launcher.png"
+    },
+    {
         "merged": "/Users/CEAFGS/.gradle/daemon/9.4.1/com.scannerue.app-debug-31:/drawable_bg_top_bar.xml.flat",
         "source": "/Users/CEAFGS/.gradle/daemon/9.4.1/com.scannerue.app-main-33:/drawable/bg_top_bar.xml"
+    },
+    {
+        "merged": "com.scannerue.app-debug-31:/drawable_ic_launcher_foreground.xml.flat",
+        "source": "com.scannerue.app-main-33:/drawable/ic_launcher_foreground.xml"
+    },
+    {
+        "merged": "/Users/CEAFGS/.gradle/daemon/9.4.1/com.scannerue.app-debug-31:/mipmap-anydpi-v26_ic_launcher_round.xml.flat",
+        "source": "/Users/CEAFGS/.gradle/daemon/9.4.1/com.scannerue.app-main-33:/mipmap-anydpi-v26/ic_launcher_round.xml"
     },
     {
         "merged": "/Users/CEAFGS/.gradle/daemon/9.4.1/com.scannerue.app-debug-31:/layout_activity_main.xml.flat",
@@ -24,40 +72,20 @@
         "source": "/Users/CEAFGS/.gradle/daemon/9.4.1/com.scannerue.app-main-33:/drawable/bg_scanner_device.xml"
     },
     {
-        "merged": "/Users/CEAFGS/.gradle/daemon/9.4.1/com.scannerue.app-debug-31:/drawable_bg_scanned_card.xml.flat",
-        "source": "/Users/CEAFGS/.gradle/daemon/9.4.1/com.scannerue.app-main-33:/drawable/bg_scanned_card.xml"
-    },
-    {
         "merged": "/Users/CEAFGS/.gradle/daemon/9.4.1/com.scannerue.app-debug-31:/drawable_bg_surface_card.xml.flat",
         "source": "/Users/CEAFGS/.gradle/daemon/9.4.1/com.scannerue.app-main-33:/drawable/bg_surface_card.xml"
-    },
-    {
-        "merged": "/Users/CEAFGS/.gradle/daemon/9.4.1/com.scannerue.app-debug-31:/drawable_scanner.png.flat",
-        "source": "/Users/CEAFGS/.gradle/daemon/9.4.1/com.scannerue.app-main-33:/drawable/scanner.png"
     },
     {
         "merged": "/Users/CEAFGS/.gradle/daemon/9.4.1/com.scannerue.app-debug-31:/drawable_bg_splash_card.xml.flat",
         "source": "/Users/CEAFGS/.gradle/daemon/9.4.1/com.scannerue.app-main-33:/drawable/bg_splash_card.xml"
     },
     {
-        "merged": "/Users/CEAFGS/.gradle/daemon/9.4.1/com.scannerue.app-debug-31:/drawable_bg_status_chip.xml.flat",
-        "source": "/Users/CEAFGS/.gradle/daemon/9.4.1/com.scannerue.app-main-33:/drawable/bg_status_chip.xml"
-    },
-    {
         "merged": "/Users/CEAFGS/.gradle/daemon/9.4.1/com.scannerue.app-debug-31:/drawable_bg_scanner_handle.xml.flat",
         "source": "/Users/CEAFGS/.gradle/daemon/9.4.1/com.scannerue.app-main-33:/drawable/bg_scanner_handle.xml"
     },
     {
-        "merged": "/Users/CEAFGS/.gradle/daemon/9.4.1/com.scannerue.app-debug-31:/drawable_bg_scanner_screen.xml.flat",
-        "source": "/Users/CEAFGS/.gradle/daemon/9.4.1/com.scannerue.app-main-33:/drawable/bg_scanner_screen.xml"
-    },
-    {
-        "merged": "com.scannerue.app-debug-31:/layout_activity_main.xml.flat",
-        "source": "com.scannerue.app-main-33:/layout/activity_main.xml"
-    },
-    {
-        "merged": "/Users/CEAFGS/.gradle/daemon/9.4.1/com.scannerue.app-debug-31:/drawable_bg_trigger_mark.xml.flat",
-        "source": "/Users/CEAFGS/.gradle/daemon/9.4.1/com.scannerue.app-main-33:/drawable/bg_trigger_mark.xml"
+        "merged": "/Users/CEAFGS/.gradle/daemon/9.4.1/com.scannerue.app-debug-31:/drawable_bg_status_chip.xml.flat",
+        "source": "/Users/CEAFGS/.gradle/daemon/9.4.1/com.scannerue.app-main-33:/drawable/bg_status_chip.xml"
     },
     {
         "merged": "/Users/CEAFGS/.gradle/daemon/9.4.1/com.scannerue.app-debug-31:/drawable_ic_matnord_mark.xml.flat",
@@ -66,5 +94,9 @@
     {
         "merged": "/Users/CEAFGS/.gradle/daemon/9.4.1/com.scannerue.app-debug-31:/drawable_bg_product_id_field.xml.flat",
         "source": "/Users/CEAFGS/.gradle/daemon/9.4.1/com.scannerue.app-main-33:/drawable/bg_product_id_field.xml"
+    },
+    {
+        "merged": "/Users/CEAFGS/.gradle/daemon/9.4.1/com.scannerue.app-debug-31:/mipmap-xxxhdpi_ic_launcher.png.flat",
+        "source": "/Users/CEAFGS/.gradle/daemon/9.4.1/com.scannerue.app-main-33:/mipmap-xxxhdpi/ic_launcher.png"
     }
 ]

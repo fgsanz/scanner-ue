@@ -29,6 +29,7 @@ drawable bg_text_button
 drawable bg_top_bar
 drawable bg_top_bar_strip
 drawable bg_trigger_mark
+drawable ic_launcher_foreground
 drawable ic_matnord_mark
 drawable scanner
 id barcodeImage
@@ -48,6 +49,8 @@ id statusText
 id topBarCard
 id waitingSection
 layout activity_main
+mipmap ic_launcher
+mipmap ic_launcher_round
 string app_name
 string state_developer
 string state_ready
